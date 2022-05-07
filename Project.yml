@@ -6,9 +6,9 @@ configFiles:
   Debug: xcconfig/Project-Debug.xcconfig
   Release: xcconfig/Project-Release.xcconfig
 
-options: 
-  indentWidth: 2  
-  tabWidth: 2  
+options:
+  indentWidth: 2
+  tabWidth: 2
 
 packages:
   Then:
@@ -31,7 +31,7 @@ packages:
     version: 3.3.0
 
 targets:
-  LiarGame:
+  GameBundle:
     type: application
     platform: iOS
 
@@ -41,13 +41,53 @@ targets:
       Debug: xcconfig/LiarGame-Debug.xcconfig
       Release: xcconfig/LiarGame-Release.xcconfig
 
-    sources: [LiarGame]
+    sources: [Targets/GameBundle]
     settings:
       base:
-        INFOPLIST_FILE: LiarGame/Resources/Info.plist
+        INFOPLIST_FILE: Targets/GameBundle/Resources/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: Jay.LiarGameme
 
     dependencies:
+      - target: LiarGame
+      - target: RandomMusic
+      - target: UtilKit
+      - package: Then
+      - package: RxSwift
+        product: RxSwift
+      - package: RxSwift
+        product: RxCocoa
+      - package: RxSwift
+        product: RxRelay
+      - package: Lottie
+      - package: ReactorKit
+      - package: PinLayout
+      - package: FlexLayout
+
+    preBuildScripts:
+      - path: scripts/swiftformat.sh
+        name: Swift Format
+      - path: scripts/swiftlint.sh
+        name: Swift Lint
+  LiarGame:
+    type: framework.static
+    platform: iOS
+    deploymentTarget: "15.2"
+    configFiles:
+      Debug: xcconfig/LiarGame-Debug.xcconfig
+      Release: xcconfig/LiarGame-Release.xcconfig
+    info:
+      path: Targets/LiarGame/Resources/Info.plist
+    sources: [Targets/LiarGame]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: Jay.LiarGameme
+    preBuildScripts:
+      - path: scripts/swiftformat.sh
+        name: Swift Format
+      - path: scripts/swiftlint.sh
+        name: Swift Lint
+    dependencies:
+      - target: UtilKit
       - package: Then
       - package: RxSwift
         product: RxSwift
@@ -58,10 +98,61 @@ targets:
       - package: ReactorKit
       - package: PinLayout
       - package: FlexLayout
-      - package: Lottie
-      - framework: frameworks/YouTubeiOSPlayerHelper.xcframework
+
+  RandomMusic:
+    type: framework.static
+    platform: iOS
+    deploymentTarget: "15.2"
+    info:
+      path: Targets/RandomMusic/Resources/Info.plist
+    configFiles:
+      Debug: xcconfig/LiarGame-Debug.xcconfig
+      Release: xcconfig/LiarGame-Release.xcconfig
+
+    sources: [Targets/RandomMusic]
+
+    settings:
+      base:
+        # INFOPLIST_FILE: LiarGame/Resources/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: Jay.LiarGameme
+
     preBuildScripts:
       - path: scripts/swiftformat.sh
         name: Swift Format
       - path: scripts/swiftlint.sh
         name: Swift Lint
+
+    dependencies:
+      - target: UtilKit
+      - package: Then
+      - package: RxSwift
+        product: RxSwift
+      - package: RxSwift
+        product: RxCocoa
+      - package: RxSwift
+        product: RxRelay
+      - package: ReactorKit
+      - package: PinLayout
+      - package: FlexLayout
+      - framework: frameworks/YouTubeiOSPlayerHelper.xcframework
+
+  UtilKit:
+    type: framework.static
+    platform: iOS
+    deploymentTarget: "15.2"
+    configFiles:
+      Debug: xcconfig/LiarGame-Debug.xcconfig
+      Release: xcconfig/LiarGame-Release.xcconfig
+    info:
+      path: Targets/UtilKit/Resources/Info.plist
+    sources: [Targets/UtilKit]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: Jay.LiarGameme
+    preBuildScripts:
+      - path: scripts/swiftformat.sh
+        name: Swift Format
+      - path: scripts/swiftlint.sh
+        name: Swift Lint
+    dependencies:
+      - package: FlexLayout
